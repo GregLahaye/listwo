@@ -46,19 +46,21 @@ export const Dashboard = () => {
           <List key={list.id} list={list}></List>
         ))}
 
-        <div className="col-3">
+        <div className="col-3 my-3">
           <ul className="list-group">
             <li className="list-group-item">
               <strong>Add List</strong>
             </li>
-            <form onSubmit={handleSubmit} className="form-group">
-              <input
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                type="text"
-                className="form-control"
-              />
-            </form>
+            <li className="list-group-item">
+              <form onSubmit={handleSubmit} className="form-row">
+                <input
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  type="text"
+                  className="form-control"
+                />
+              </form>
+            </li>
           </ul>
         </div>
       </div>
