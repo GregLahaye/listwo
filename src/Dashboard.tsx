@@ -1,7 +1,7 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { db } from "./firebase";
 import { List } from "./List";
-import { IList, IListMap } from "./types";
+import { IList } from "./types";
 import { UserContext } from "./UserContext";
 
 export const Dashboard = () => {
@@ -18,26 +18,26 @@ export const Dashboard = () => {
     setText("");
   };
 
-  const fetchLists = async () => {
-    const ref = db().ref(`users/${state.uid}/lists`);
-
-    ref.on("value", (snapshot) => {
-      const values: IList[] = [];
-
-      snapshot.forEach((child) => {
-        values.push({
-          id: child.key,
-          title: child.val().title,
-        });
-      });
-
-      setLists(values);
-    });
-  };
-
   useEffect(() => {
+    const fetchLists = async () => {
+      const ref = db().ref(`users/${state.uid}/lists`);
+
+      ref.on("value", (snapshot) => {
+        const values: IList[] = [];
+
+        snapshot.forEach((child) => {
+          values.push({
+            id: child.key,
+            title: child.val().title,
+          });
+        });
+
+        setLists(values);
+      });
+    };
+
     fetchLists();
-  }, []);
+  }, [state.uid]);
 
   return (
     <div className="container">

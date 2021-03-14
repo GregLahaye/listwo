@@ -29,29 +29,29 @@ export const List = ({ list }: IListProps) => {
       .update({ timestamp: Date.now() });
   };
 
-  const fetchItems = async () => {
-    const ref = db()
-      .ref(`users/${state.uid}/lists/${list.id}/items`)
-      .orderByChild("timestamp");
-
-    ref.on("value", (snapshot) => {
-      const values: IItem[] = [];
-
-      snapshot.forEach((child) => {
-        values.push({
-          id: child.key,
-          title: child.val().title,
-          timestamp: child.val().timestamp,
-        });
-      });
-
-      setItems(values);
-    });
-  };
-
   useEffect(() => {
+    const fetchItems = async () => {
+      const ref = db()
+        .ref(`users/${state.uid}/lists/${list.id}/items`)
+        .orderByChild("timestamp");
+
+      ref.on("value", (snapshot) => {
+        const values: IItem[] = [];
+
+        snapshot.forEach((child) => {
+          values.push({
+            id: child.key,
+            title: child.val().title,
+            timestamp: child.val().timestamp,
+          });
+        });
+
+        setItems(values);
+      });
+    };
+
     fetchItems();
-  }, []);
+  }, [state.uid, list.id]);
 
   return (
     <div className="col-3 my-3">
