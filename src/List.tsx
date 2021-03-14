@@ -57,14 +57,17 @@ export const List = ({ list }: IListProps) => {
     <div className="col-3">
       <strong>{list.title}</strong>
       <ul className="list-group">
-        {items.map((item) => (
-          <li
+        {items.map((item, index) => (
+          <button
+            type="button"
+            className={`list-group-item list-group-item-action ${
+              index === 0 ? "active" : null
+            }`}
             key={item.id}
-            className="list-group-item"
             onClick={() => update(item.id)}
           >
             {item.title}
-          </li>
+          </button>
         ))}
         <li className="list-group-item">
           <form onSubmit={handleSubmit} className="form-group">
