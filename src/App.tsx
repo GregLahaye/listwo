@@ -5,7 +5,7 @@ import { Authenticate } from "./Authenticate";
 import { AnonymousRoute } from "./AnonymousRoute";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { UserContext, userReducer, initial } from "./UserContext";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Routes } from "react-router-dom";
 
 const App = () => {
   const [state, dispatch] = useReducer(userReducer, initial);

@@ -1,22 +1,40 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { db } from "./firebase";
+import { List } from "./List";
+import { IList, IListMap } from "./types";
 import { UserContext } from "./UserContext";
 
 export const Dashboard = () => {
   const { state } = useContext(UserContext);
 
+  const [lists, setLists] = useState<IList[]>([]);
+
   const fetchLists = async () => {
     const ref = db().ref(`users/${state.uid}/lists`);
 
     ref.on("value", (snapshot) => {
-      const value = snapshot.val();
-      console.log(value);
+      const values: IList[] = [];
+
+      snapshot.forEach((child) => {
+        values.push({
+          id: child.key,
+          title: child.val().title,
+        });
+      });
+
+      setLists(values);
     });
   };
 
   useEffect(() => {
     fetchLists();
-  });
+  }, []);
 
-  return <p>hello</p>;
+  return (
+    <div>
+      {lists.map((list) => (
+        <List key={list.id} list={list}></List>
+      ))}
+    </div>
+  );
 };
