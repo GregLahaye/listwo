@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { db } from "./firebase";
 import { IItem, IList } from "./types";
 import { UserContext } from "./UserContext";
@@ -11,6 +11,23 @@ export const List = ({ list }: IListProps) => {
   const { state } = useContext(UserContext);
 
   const [items, setItems] = useState<IItem[]>([]);
+  const [text, setText] = useState("");
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    db()
+      .ref(`users/${state.uid}/lists/${list.id}/items`)
+      .push({ title: text, timestamp: Date.now() });
+
+    setText("");
+  };
+
+  const update = (id: string | null) => {
+    db()
+      .ref(`users/${state.uid}/lists/${list.id}/items/${id}`)
+      .update({ timestamp: Date.now() });
+  };
 
   const fetchItems = async () => {
     const ref = db()
@@ -37,10 +54,29 @@ export const List = ({ list }: IListProps) => {
   }, []);
 
   return (
-    <div>
-      {items.map((item) => (
-        <p key={item.id}>{item.title}</p>
-      ))}
+    <div className="col-3">
+      <strong>{list.title}</strong>
+      <ul className="list-group">
+        {items.map((item) => (
+          <li
+            key={item.id}
+            className="list-group-item"
+            onClick={() => update(item.id)}
+          >
+            {item.title}
+          </li>
+        ))}
+        <li className="list-group-item">
+          <form onSubmit={handleSubmit} className="form-group">
+            <input
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              type="text"
+              className="form-control"
+            />
+          </form>
+        </li>
+      </ul>
     </div>
   );
 };

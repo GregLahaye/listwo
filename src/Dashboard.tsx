@@ -31,10 +31,12 @@ export const Dashboard = () => {
   }, []);
 
   return (
-    <div>
-      {lists.map((list) => (
-        <List key={list.id} list={list}></List>
-      ))}
+    <div className="container">
+      <div className="row">
+        {lists.map((list) => (
+          <List key={list.id} list={list}></List>
+        ))}
+      </div>
     </div>
   );
 };
