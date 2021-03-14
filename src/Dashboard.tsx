@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { db } from "./firebase";
 import { List } from "./List";
 import { IList, IListMap } from "./types";
@@ -8,6 +8,15 @@ export const Dashboard = () => {
   const { state } = useContext(UserContext);
 
   const [lists, setLists] = useState<IList[]>([]);
+  const [text, setText] = useState("");
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    db().ref(`users/${state.uid}/lists/`).push({ title: text });
+
+    setText("");
+  };
 
   const fetchLists = async () => {
     const ref = db().ref(`users/${state.uid}/lists`);
@@ -36,6 +45,18 @@ export const Dashboard = () => {
         {lists.map((list) => (
           <List key={list.id} list={list}></List>
         ))}
+
+        <div className="col-3">
+          <strong>Add List</strong>
+          <form onSubmit={handleSubmit} className="form-group">
+            <input
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              type="text"
+              className="form-control"
+            />
+          </form>
+        </div>
       </div>
     </div>
   );
