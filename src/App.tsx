@@ -1,26 +1,25 @@
-import React from "react";
-import logo from "./logo.svg";
+import React, { useReducer } from "react";
 import "./App.css";
+import { Dashboard } from "./Dashboard";
+import { Authenticate } from "./Authenticate";
+import { AnonymousRoute } from "./AnonymousRoute";
+import { ProtectedRoute } from "./ProtectedRoute";
+import { UserContext, userReducer, initial } from "./UserContext";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-function App() {
+const App = () => {
+  const [state, dispatch] = useReducer(userReducer, initial);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <UserContext.Provider value={{ state, dispatch }}>
+      <BrowserRouter>
+        <Routes>
+          <AnonymousRoute path="/authenticate" element={<Authenticate />} />
+          <ProtectedRoute path="/lists" element={<Dashboard />} />
+        </Routes>
+      </BrowserRouter>
+    </UserContext.Provider>
   );
-}
+};
 
 export default App;

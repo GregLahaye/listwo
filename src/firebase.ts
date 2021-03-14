@@ -1,5 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC4X74s8FyxG1Eps4C50YLrY8TMrTB-53c",
@@ -16,28 +17,16 @@ firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth;
 export const db = firebase.database;
 
-export const signIn = async () => {
-  var provider = new firebase.auth.GoogleAuthProvider();
+export const authenticate = async () => {
+  const provider = new firebase.auth.GoogleAuthProvider();
 
-  try {
-    const result = await firebase.auth().signInWithPopup(provider);
+  const result = await firebase.auth().signInWithPopup(provider);
 
-    /** @type {firebase.auth.OAuthCredential} */
-    var credential: any = result.credential as any;
+  const credential = result.credential as firebase.auth.OAuthCredential;
 
-    // This gives you a Google Access Token. You can use it to access the Google API.
-    var token = credential.accessToken;
-    // The signed-in user info.
-    var user = result.user;
-    // ...
-  } catch (error) {
-    // Handle Errors here.
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    // The email of the user's account used.
-    var email = error.email;
-    // The firebase.auth.AuthCredential type that was used.
-    var credential = error.credential;
-    // ...
-  }
+  const token = credential.accessToken;
+
+  const user = result.user;
+
+  return { user, token };
 };
