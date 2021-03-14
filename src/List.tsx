@@ -54,9 +54,11 @@ export const List = ({ list }: IListProps) => {
   }, []);
 
   return (
-    <div className="col-3">
-      <strong>{list.title}</strong>
+    <div className="col-3 my-3">
       <ul className="list-group">
+        <li className="list-group-item">
+          <strong>{list.title}</strong>
+        </li>
         {items.map((item, index) => (
           <button
             type="button"
@@ -70,7 +72,7 @@ export const List = ({ list }: IListProps) => {
           </button>
         ))}
         <li className="list-group-item">
-          <form onSubmit={handleSubmit} className="form-group">
+          <form onSubmit={handleSubmit} className="form-row">
             <input
               value={text}
               onChange={(e) => setText(e.target.value)}
